@@ -18,3 +18,9 @@ benchmarks/outputs
 benchmarks/dataset
 benchmarks/lfwe
 venv
+pytorch_imports/
+.venv/
+_source_material/
+test_images/
+*.pth
+models/

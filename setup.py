@@ -1,38 +1,36 @@
-import json
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-with open("requirements.txt", "r", encoding="utf-8") as f:
-    requirements = f.read().split("\n")
-
-with open("package_info.json", "r", encoding="utf-8") as f:
-    package_info = json.load(f)
-
 setuptools.setup(
-    name="deepface",
-    version=package_info["version"],
-    author="Sefik Ilkin Serengil",
-    author_email="serengil@gmail.com",
-    description=(
-        "A Lightweight Face Recognition and Facial Attribute Analysis Framework"
-        " (Age, Gender, Emotion, Race) for Python"
-    ),
-    data_files=[("", ["README.md", "requirements.txt", "package_info.json"])],
+    name="luna_face_recog",
+    version="1.0.0",
+    author="Luna Face Recognition Team",
+    author_email="",
+    description="A Modern PyTorch-based Face Recognition Framework with GPU acceleration",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/serengil/deepface",
+    url="https://github.com/LSDJesus/Luna_face_recog",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
-    entry_points={
-        "console_scripts": ["deepface = deepface.DeepFace:cli"],
-    },
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     license="MIT",
-    install_requires=requirements,
+    install_requires=[
+        "torch>=1.9.0",
+        "torchvision>=0.10.0",
+        "numpy>=1.21.0",
+        "opencv-python>=4.5.0",
+        "Pillow>=8.0.0",
+        "requests>=2.25.0",
+        "tqdm>=4.62.0",
+        "matplotlib>=3.5.0",
+        "scikit-learn>=1.0.0",
+        "pandas>=1.3.0",
+    ],
 )
