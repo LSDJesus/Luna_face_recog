@@ -21,13 +21,15 @@ class LunaFace:
     Main Luna Face Recognition class
     """
 
-    def __init__(self, model_name: str = "arcface", device: str = "auto"):
+    def __init__(self, model_name: str = "arcface", device: str = "auto", detector_pack: str = "buffalo_l", detector_root: str | None = None):
         """
         Initialize Luna Face Recognition
 
         Args:
             model_name: Face recognition model to use ('arcface', 'facenet', 'vggface')
             device: Device to run on ('cpu', 'cuda', 'auto')
+            detector_pack: InsightFace model pack name (e.g. 'buffalo_l', 'antelopev2') used for detection & age/gender
+            detector_root: Optional root directory where packs are stored (defaults to insightface internal download path if None)
         """
         self.model_name = model_name
         self.device = self._setup_device(device)
@@ -35,7 +37,8 @@ class LunaFace:
         # Initialize models
         self.face_recognizer = FaceRecognitionModel(model_name, self.device)
         self.facial_analyzer = FacialAnalysisModel(self.device)
-        self.face_detector = FaceDetector(self.device)
+        self.face_detector = FaceDetector(self.device, model_pack=detector_pack, model_root=detector_root)
+        self.detector_pack = detector_pack
 
         logger.info(f"LunaFace initialized with {model_name} on {self.device}")
 

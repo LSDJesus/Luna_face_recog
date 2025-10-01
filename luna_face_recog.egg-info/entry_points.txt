@@ -1,0 +1,3 @@
+[console_scripts]
+luna-face = luna_face_recog.cli:main
+luna-face-api = luna_face_recog.api_server:app

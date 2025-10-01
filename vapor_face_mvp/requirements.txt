@@ -1,0 +1,34 @@
+# VAPOR-FACE MVP Requirements
+# Core ML/AI
+torch>=2.0.0
+torchvision>=0.15.0
+transformers>=4.30.0
+onnxruntime>=1.15.0
+
+# Computer Vision
+opencv-python>=4.8.0
+Pillow>=9.5.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Face Detection (reuse from luna_face_recog)
+insightface>=0.7.3
+
+# Database
+sqlite3  # Built into Python
+sqlalchemy>=2.0.0
+
+# GUI
+tkinter  # Built into Python
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Utilities
+tqdm>=4.65.0
+pandas>=2.0.0
+pyyaml>=6.0
+jsonlines>=3.1.0
+
+# Optional: For future MMProj integration
+# sentence-transformers>=2.2.0
+# clip-by-openai>=1.0
