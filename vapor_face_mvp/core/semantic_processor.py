@@ -146,14 +146,14 @@ class SemanticProcessor:
     """Main semantic processing pipeline"""
     
     def __init__(self, 
-                 encoder_type: str = "mock",
+                 encoder_type: str = "auto",
                  dimension: int = 1024,
                  device: str = "auto"):
         """
         Initialize semantic processor
         
         Args:
-            encoder_type: Type of encoder ("mock", "clip", "mmproj")
+            encoder_type: Type of encoder ("auto", "qwen", "mock", "clip")
             dimension: Embedding dimension (for mock encoder)
             device: Compute device
         """
@@ -161,7 +161,19 @@ class SemanticProcessor:
         self.device = device
         
         # Initialize encoder
-        if encoder_type == "mock":
+        if encoder_type == "auto":
+            # Try Qwen first, fall back to mock
+            try:
+                from .qwen_encoder import create_semantic_encoder
+                self.encoder = create_semantic_encoder("qwen", device=device)
+                logger.info("Using Qwen2.5-VL encoder")
+            except (ImportError, FileNotFoundError) as e:
+                logger.warning(f"Qwen encoder not available ({e}), using mock encoder")
+                self.encoder = MockMMProjEncoder(dimension=dimension, device=device)
+        elif encoder_type == "qwen":
+            from .qwen_encoder import create_semantic_encoder
+            self.encoder = create_semantic_encoder("qwen", device=device)
+        elif encoder_type == "mock":
             self.encoder = MockMMProjEncoder(dimension=dimension, device=device)
         elif encoder_type == "clip":
             self.encoder = CLIPEncoder()
@@ -202,8 +214,8 @@ class SemanticProcessor:
             }
             
             # Add semantic axes if available
-            if hasattr(self.encoder, 'get_semantic_axes'):
-                result["semantic_axes"] = self.encoder.get_semantic_axes()
+            if hasattr(self.encoder, 'semantic_axes'):
+                result["semantic_axes"] = self.encoder.semantic_axes
             
             return result
             

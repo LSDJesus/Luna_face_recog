@@ -5,6 +5,9 @@ torchvision>=0.15.0
 transformers>=4.30.0
 onnxruntime>=1.15.0
 
+# LLM/VLM Support
+llama-cpp-python>=0.2.0  # For Qwen2.5-VL GGUF models
+
 # Computer Vision
 opencv-python>=4.8.0
 Pillow>=9.5.0

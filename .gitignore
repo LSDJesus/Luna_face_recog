@@ -24,3 +24,4 @@ _source_material/
 test_images/
 *.pth
 models/
+vapor_face_mvp/models/*.*

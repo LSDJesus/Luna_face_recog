@@ -15,13 +15,13 @@ from core.surgical_pruner_fixed import SurgicalPruner
 from core.vector_store import VectorStore
 
 def test_semantic_processing():
-    """Test semantic processing with mock encoder"""
+    """Test semantic processing with auto encoder selection"""
     print("\\n" + "="*50)
     print("TESTING SEMANTIC PROCESSING")
     print("="*50)
     
-    # Create mock processor
-    processor = SemanticProcessor(encoder_type="mock", dimension=1024)
+    # Create processor with auto encoder selection (will try Qwen first, fall back to mock)
+    processor = SemanticProcessor(encoder_type="auto")
     
     # Create a mock face image (random noise)
     mock_face = np.random.randint(0, 255, (512, 512, 3), dtype=np.uint8)
