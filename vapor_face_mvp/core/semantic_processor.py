@@ -116,6 +116,7 @@ class MockMMProjEncoder(SemanticEncoder):
     
     def get_model_info(self) -> Dict[str, Any]:
         return {
+            "encoder_type": "mock",
             "model_type": "MockMMProj",
             "dimension": self.dimension,
             "device": self.device,
@@ -173,12 +174,16 @@ class SemanticProcessor:
         elif encoder_type == "qwen":
             from .qwen_encoder import create_semantic_encoder
             self.encoder = create_semantic_encoder("qwen", device=device)
+        elif encoder_type == "arcface":
+            from .arcface_encoder import ArcFaceEncoder
+            self.encoder = ArcFaceEncoder(device=device)
+            logger.info("Using ArcFace encoder for identity embeddings")
         elif encoder_type == "mock":
             self.encoder = MockMMProjEncoder(dimension=dimension, device=device)
         elif encoder_type == "clip":
             self.encoder = CLIPEncoder()
         else:
-            raise ValueError(f"Unknown encoder type: {encoder_type}")
+            raise ValueError(f"Unknown encoder type: {encoder_type}. Supported: auto, qwen, arcface, mock, clip")
         
         logger.info(f"Semantic processor initialized with {encoder_type} encoder")
     

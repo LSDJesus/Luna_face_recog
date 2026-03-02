@@ -1,3 +1,61 @@
+# VAPOR-FACE MVP
+
+This module powers the "Semantic Archaeology" experiments over face recognition embeddings.
+
+## What’s new
+
+- ArcFace encoder (InsightFace buffalo_l) for real 512D identity embeddings: `core/arcface_encoder.py`
+- Linear probe training (TCAV-style) to discover semantic axes: `core/semantic_probes.py`
+- Vector-space surgery helpers: `core/semantic_ops.py`
+- End-to-end sweep experiment (auto-label Male/Young from InsightFace): `experiments/run_semantic_sweep.py`
+
+## Quickstart
+
+1) Activate your environment
+
+```pwsh
+& .venv/Scripts/Activate.ps1
+```
+
+2) Sanity check ArcFace extraction on a sample image
+
+```pwsh
+$env:PYTHONIOENCODING="utf-8"; .venv/Scripts/python.exe -c "from vapor_face_mvp.core.arcface_encoder import ArcFaceEncoder; import cv2, numpy as np; enc=ArcFaceEncoder(); img=cv2.imread(r'd:\AI\Github_Desktop\Luna_face_recog\Test_images\AI_Generated\10female.jpg'); img=cv2.cvtColor(img, cv2.COLOR_BGR2RGB); emb=enc.encode(img); print(f'ArcFace OK: {emb.shape[0]}D, L2={np.linalg.norm(emb):.6f}')"
+```
+
+3) Run the semantic sweep (auto-labels Male/Young via InsightFace age/gender)
+
+```pwsh
+.venv/Scripts/python.exe vapor_face_mvp/experiments/run_semantic_sweep.py --root Test_images/AI_Generated --attrs Male Young --alphas 0 0.05 0.1 0.2 0.3
+```
+
+You’ll see, for each attribute, the mean change in projected score (Δscore) versus the cosine similarity to the original embedding (identity preservation). Small alphas (0.05–0.20) should produce clear, monotonic score shifts while keeping cosine > 0.97 on average.
+
+## Train custom probes from labels (optional)
+
+If you have your own labels (e.g., CelebA), use `SemanticProbeTrainer` to train and save probes:
+
+```python
+from vapor_face_mvp.core.semantic_probes import SemanticProbeTrainer
+trainer = SemanticProbeTrainer(max_iter=1000)
+results = trainer.train_all_probes(embeddings, attributes)  # embeddings: (N,512), attributes: Dict[str, (N,)]
+axes = trainer.get_semantic_axes()
+trainer.save_probes('probes/celeba_probes.json')
+```
+
+## Apply semantic surgery
+
+```python
+from vapor_face_mvp.core.semantic_ops import apply_semantic_shift
+e_shifted = apply_semantic_shift(e, axes['Smiling'], alpha=0.2, mode='add')
+```
+
+## Notes
+
+- ArcFace comes from InsightFace model pack `buffalo_l` and returns L2-normalized 512D vectors.
+- Auto-labels use InsightFace’s age/gender head; for richer attributes, provide your own labels.
+- Keep alpha small to preserve identity; validate with cosine or verification metrics.
+
 # VAPOR-FACE MVP: Minimum Viable Proof-of-Concept
 
 A streamlined implementation focused on semantic facial recognition research and surgical vector pruning experiments.
